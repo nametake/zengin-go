@@ -1,0 +1,30 @@
+{
+  "001": {
+    "code": "001",
+    "name": "本店",
+    "kana": "ホンテン",
+    "hira": "ほんてん",
+    "roma": "honten"
+  },
+  "002": {
+    "code": "002",
+    "name": "丸の内",
+    "kana": "マルノウチ",
+    "hira": "まるのうち",
+    "roma": "marunouchi"
+  },
+  "003": {
+    "code": "003",
+    "name": "瓦町",
+    "kana": "カワラマチ",
+    "hira": "かわらまち",
+    "roma": "kawaramachi"
+  },
+  "004": {
+    "code": "004",
+    "name": "船場",
+    "kana": "センバ",
+    "hira": "せんば",
+    "roma": "semba"
+  }
+}
