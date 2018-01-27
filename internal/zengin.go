@@ -1,6 +1,9 @@
 package internal
 
 import (
+	"go/ast"
+	"go/format"
+	"go/token"
 	"io"
 
 	"github.com/nametake/zengin-go"
@@ -16,5 +19,9 @@ func Read(fpath string) ([]*zengin.Bank, error) {
 }
 
 func Output(w io.Writer, banks map[string]*zengin.Bank) error {
-	return nil
+	f := &ast.File{
+		Name: ast.NewIdent("internal"),
+	}
+
+	return format.Node(w, token.NewFileSet(), f)
 }

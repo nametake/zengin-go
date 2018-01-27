@@ -1,4 +1,4 @@
-package testdata
+package internal
 
 import zengin "github.com/nametake/zengin-go"
 
