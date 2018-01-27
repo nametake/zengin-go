@@ -197,7 +197,7 @@ func genBranches(branches map[string]*zengin.Branch) *ast.CompositeLit {
 							Name: "zengin",
 						},
 						Sel: &ast.Ident{
-							Name: "Bank",
+							Name: "Branch",
 						},
 					},
 					Elts: []ast.Expr{

@@ -8,8 +8,8 @@ import (
 )
 
 func TestOutput(t *testing.T) {
+	filename := "output.go"
 	t.Run("output test", func(t *testing.T) {
-
 		expected, err := os.Open("./banks_test.go")
 		if err != nil {
 			t.Log("foo")
@@ -17,7 +17,7 @@ func TestOutput(t *testing.T) {
 		}
 		defer expected.Close()
 
-		actual, err := os.Create("banks.go")
+		actual, err := os.Create(filename)
 		if err != nil {
 			t.Error(err)
 		}
@@ -46,7 +46,7 @@ func TestOutput(t *testing.T) {
 		}
 	})
 
-	if err := os.Remove("banks.go"); err != nil {
+	if err := os.Remove(filename); err != nil {
 		t.Error(err)
 	}
 }
