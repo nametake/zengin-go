@@ -148,6 +148,12 @@ func bankElts(banks map[string]*zengin.Bank) []ast.Expr {
 								Value: fmt.Sprintf("\"%s\"", bank.Roma),
 							},
 						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Branches",
+							},
+							Value: genBranches(bank.Branches),
+						},
 					},
 				},
 			},
@@ -156,4 +162,96 @@ func bankElts(banks map[string]*zengin.Bank) []ast.Expr {
 	}
 
 	return elts
+}
+
+func genBranches(branches map[string]*zengin.Branch) *ast.CompositeLit {
+	lit := &ast.CompositeLit{
+		Type: &ast.MapType{
+			Key: &ast.Ident{
+				Name: "string",
+			},
+			Value: &ast.StarExpr{
+				X: &ast.SelectorExpr{
+					X: &ast.Ident{
+						Name: "zengin",
+					},
+					Sel: &ast.Ident{
+						Name: "Branch",
+					},
+				},
+			},
+		},
+	}
+
+	for k, branch := range branches {
+		expr := &ast.KeyValueExpr{
+			Key: &ast.BasicLit{
+				Kind:  token.STRING,
+				Value: fmt.Sprintf("\"%s\"", k),
+			},
+			Value: &ast.UnaryExpr{
+				Op: token.AND,
+				X: &ast.CompositeLit{
+					Type: &ast.SelectorExpr{
+						X: &ast.Ident{
+							Name: "zengin",
+						},
+						Sel: &ast.Ident{
+							Name: "Bank",
+						},
+					},
+					Elts: []ast.Expr{
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Code",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", branch.Code),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Name",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", branch.Name),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Kana",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", branch.Kana),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Hira",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", branch.Hira),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Roma",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", branch.Roma),
+							},
+						},
+					},
+				},
+			},
+		}
+		lit.Elts = append(lit.Elts, expr)
+	}
+
+	return lit
 }

@@ -42,7 +42,7 @@ func TestOutput(t *testing.T) {
 		}
 
 		if !bytes.Equal(e, a) {
-			t.Errorf("not equal: output file:\n%s", string(a))
+			t.Errorf("not equal: output file:\nexpected:\n%s\nactual:\n%s", string(e), string(a))
 		}
 	})
 
