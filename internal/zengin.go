@@ -1,23 +1,50 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"go/ast"
 	"go/format"
 	"go/token"
 	"io"
+	"os"
+	"path"
 
 	"github.com/nametake/zengin-go"
 )
 
 const (
-	importPath  string = `"github.com/nametake/zengin-go"`
+	importPath string = `"github.com/nametake/zengin-go"`
+
 	banksFile   string = "banks.json"
-	branchesDir string = "data"
+	branchesDir string = "branches"
 )
 
-func Read(fpath string) ([]*zengin.Bank, error) {
-	panic("not implemented")
+func Read(datapath string) (map[string]*zengin.Bank, error) {
+	f, err := os.Open(path.Join(datapath, banksFile))
+	if err != nil {
+		return nil, err
+	}
+
+	var banks map[string]*zengin.Bank
+
+	if err := json.NewDecoder(f).Decode(&banks); err != nil {
+		return nil, err
+	}
+
+	for k, b := range banks {
+		n := fmt.Sprintf("%s.json", k)
+		bf, err := os.Open(path.Join(datapath, branchesDir, n))
+		if err != nil {
+			return nil, err
+		}
+		if err := json.NewDecoder(bf).Decode(&b.Branches); err != nil {
+			return nil, err
+		}
+
+	}
+
+	return banks, nil
 }
 
 func Output(w io.Writer, banks map[string]*zengin.Bank) error {

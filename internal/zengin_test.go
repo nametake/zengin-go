@@ -4,8 +4,25 @@ import (
 	"bytes"
 	"io/ioutil"
 	"os"
+	"reflect"
 	"testing"
+
+	"github.com/k0kubun/pp"
 )
+
+func TestRead(t *testing.T) {
+	t.Run("read test", func(t *testing.T) {
+		banks, err := Read("./testdata")
+		if err != nil {
+			t.Error(err)
+		}
+		if !reflect.DeepEqual(Banks, banks) {
+			t.Errorf("not equal: output file:\nexpected:\n%+v\nactual:\n%+v", Banks, banks)
+			pp.Println(banks)
+			pp.Println(Banks)
+		}
+	})
+}
 
 func TestOutput(t *testing.T) {
 	filename := "output.go"
