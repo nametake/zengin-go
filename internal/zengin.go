@@ -70,38 +70,7 @@ func Output(w io.Writer, banks map[string]*zengin.Bank) error {
 										},
 									},
 								},
-								Elts: []ast.Expr{
-									&ast.KeyValueExpr{
-										Key: &ast.BasicLit{
-											Kind:  token.STRING,
-											Value: fmt.Sprintf("\"%s\"", "0001"),
-										},
-										Value: &ast.UnaryExpr{
-											Op: token.AND,
-											X: &ast.CompositeLit{
-												Type: &ast.SelectorExpr{
-													X: &ast.Ident{
-														Name: "zengin",
-													},
-													Sel: &ast.Ident{
-														Name: "Bank",
-													},
-												},
-												Elts: []ast.Expr{
-													&ast.KeyValueExpr{
-														Key: &ast.Ident{
-															Name: "Code",
-														},
-														Value: &ast.BasicLit{
-															Kind:  token.STRING,
-															Value: fmt.Sprintf("\"%s\"", "0001"),
-														},
-													},
-												},
-											},
-										},
-									},
-								},
+								Elts: bankElts(banks),
 							},
 						},
 					},
@@ -111,4 +80,80 @@ func Output(w io.Writer, banks map[string]*zengin.Bank) error {
 	}
 
 	return format.Node(w, token.NewFileSet(), f)
+}
+
+func bankElts(banks map[string]*zengin.Bank) []ast.Expr {
+	var elts []ast.Expr
+
+	for k, bank := range banks {
+		expr := &ast.KeyValueExpr{
+			Key: &ast.BasicLit{
+				Kind:  token.STRING,
+				Value: fmt.Sprintf("\"%s\"", k),
+			},
+			Value: &ast.UnaryExpr{
+				Op: token.AND,
+				X: &ast.CompositeLit{
+					Type: &ast.SelectorExpr{
+						X: &ast.Ident{
+							Name: "zengin",
+						},
+						Sel: &ast.Ident{
+							Name: "Bank",
+						},
+					},
+					Elts: []ast.Expr{
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Code",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", bank.Code),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Name",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", bank.Name),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Kana",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", bank.Kana),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Hira",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", bank.Hira),
+							},
+						},
+						&ast.KeyValueExpr{
+							Key: &ast.Ident{
+								Name: "Roma",
+							},
+							Value: &ast.BasicLit{
+								Kind:  token.STRING,
+								Value: fmt.Sprintf("\"%s\"", bank.Roma),
+							},
+						},
+					},
+				},
+			},
+		}
+		elts = append(elts, expr)
+	}
+
+	return elts
 }
