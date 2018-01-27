@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"go/ast"
 	"go/format"
 	"go/token"
@@ -41,9 +42,11 @@ func Output(w io.Writer, banks map[string]*zengin.Bank) error {
 			},
 			// banks
 			&ast.GenDecl{
+				// var
 				Tok: token.VAR,
 				Specs: []ast.Spec{
 					&ast.ValueSpec{
+						// Banks
 						Names: []*ast.Ident{
 							&ast.Ident{
 								Name: "Banks",
@@ -51,6 +54,7 @@ func Output(w io.Writer, banks map[string]*zengin.Bank) error {
 						},
 						Values: []ast.Expr{
 							&ast.CompositeLit{
+								// map[string]*zengin.Bank
 								Type: &ast.MapType{
 									Key: &ast.Ident{
 										Name: "string",
@@ -62,6 +66,38 @@ func Output(w io.Writer, banks map[string]*zengin.Bank) error {
 											},
 											Sel: &ast.Ident{
 												Name: "Bank",
+											},
+										},
+									},
+								},
+								Elts: []ast.Expr{
+									&ast.KeyValueExpr{
+										Key: &ast.BasicLit{
+											Kind:  token.STRING,
+											Value: fmt.Sprintf("\"%s\"", "0001"),
+										},
+										Value: &ast.UnaryExpr{
+											Op: token.AND,
+											X: &ast.CompositeLit{
+												Type: &ast.SelectorExpr{
+													X: &ast.Ident{
+														Name: "zengin",
+													},
+													Sel: &ast.Ident{
+														Name: "Bank",
+													},
+												},
+												Elts: []ast.Expr{
+													&ast.KeyValueExpr{
+														Key: &ast.Ident{
+															Name: "Code",
+														},
+														Value: &ast.BasicLit{
+															Kind:  token.STRING,
+															Value: fmt.Sprintf("\"%s\"", "0001"),
+														},
+													},
+												},
 											},
 										},
 									},
