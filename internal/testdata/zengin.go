@@ -1,5 +1,4 @@
-// Package internal provides ...
-package internal
+package testdata
 
 import zengin "github.com/nametake/zengin-go"
 
