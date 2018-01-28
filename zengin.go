@@ -6,7 +6,7 @@ type Bank struct {
 	Kana     string
 	Hira     string
 	Roma     string
-	Branches map[string]*Branch
+	Branches map[string]Branch
 }
 
 type Branch struct {
