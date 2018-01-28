@@ -30,22 +30,19 @@ func Read(datapath string) (map[string]Bank, error) {
 		return nil, err
 	}
 
-	for k, b := range banks {
+	for k := range banks {
 		n := fmt.Sprintf("%s.json", k)
 		bf, err := os.Open(path.Join(datapath, branchesDir, n))
 		if err != nil {
 			return nil, err
 		}
-		var branches map[string]*Branch
+		var branches map[string]Branch
 		if err := json.NewDecoder(bf).Decode(&branches); err != nil {
 			return nil, err
 		}
-		b.Branches = map[string]Branch{}
-		for bk, br := range branches {
-			b.Branches[bk] = *br
-			fmt.Println(b.Branches[bk])
-		}
-
+		bank := banks[k]
+		bank.Branches = branches
+		banks[k] = bank
 	}
 
 	return banks, nil
