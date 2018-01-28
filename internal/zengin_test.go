@@ -6,8 +6,6 @@ import (
 	"os"
 	"reflect"
 	"testing"
-
-	"github.com/k0kubun/pp"
 )
 
 func TestRead(t *testing.T) {
@@ -18,8 +16,6 @@ func TestRead(t *testing.T) {
 		}
 		if !reflect.DeepEqual(Banks, banks) {
 			t.Errorf("not equal: output file:\nexpected:\n%+v\nactual:\n%+v", Banks, banks)
-			pp.Println(banks)
-			pp.Println(Banks)
 		}
 	})
 }

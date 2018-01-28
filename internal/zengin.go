@@ -18,13 +18,13 @@ const (
 	branchesDir string = "branches"
 )
 
-func Read(datapath string) (map[string]*Bank, error) {
+func Read(datapath string) (map[string]Bank, error) {
 	f, err := os.Open(path.Join(datapath, banksFile))
 	if err != nil {
 		return nil, err
 	}
 
-	var banks map[string]*Bank
+	var banks map[string]Bank
 
 	if err := json.NewDecoder(f).Decode(&banks); err != nil {
 		return nil, err
@@ -45,7 +45,7 @@ func Read(datapath string) (map[string]*Bank, error) {
 	return banks, nil
 }
 
-func Output(w io.Writer, pkgname string, banks map[string]*Bank) error {
+func Output(w io.Writer, pkgname string, banks map[string]Bank) error {
 	f := &ast.File{
 		// packange name
 		Name: ast.NewIdent(pkgname),
@@ -87,7 +87,7 @@ func Output(w io.Writer, pkgname string, banks map[string]*Bank) error {
 	return format.Node(w, token.NewFileSet(), f)
 }
 
-func bankElts(banks map[string]*Bank) []ast.Expr {
+func bankElts(banks map[string]Bank) []ast.Expr {
 	var elts []ast.Expr
 
 	for k, bank := range banks {
@@ -164,7 +164,7 @@ func bankElts(banks map[string]*Bank) []ast.Expr {
 	return elts
 }
 
-func genBranches(branches map[string]*Branch) *ast.CompositeLit {
+func genBranches(branches map[string]Branch) *ast.CompositeLit {
 	lit := &ast.CompositeLit{
 		Type: &ast.MapType{
 			Key: &ast.Ident{
