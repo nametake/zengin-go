@@ -40,7 +40,7 @@ func TestOutput(t *testing.T) {
 		}
 		defer actual.Close()
 
-		if err := Output(actual, Banks); err != nil {
+		if err := Output(actual, "internal", Banks); err != nil {
 			t.Error(err)
 		}
 

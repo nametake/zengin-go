@@ -37,7 +37,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := internal.Output(f, banks); err != nil {
+	if err := internal.Output(f, "zengin", banks); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}

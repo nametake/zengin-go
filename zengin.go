@@ -1,18 +1,18 @@
 package zengin
 
 type Bank struct {
-	Code     string             `json:"code"`
-	Name     string             `json:"name"`
-	Kana     string             `json:"kana"`
-	Hira     string             `json:"hira"`
-	Roma     string             `json:"roma"`
-	Branches map[string]*Branch `json:"branches"`
+	Code     string
+	Name     string
+	Kana     string
+	Hira     string
+	Roma     string
+	Branches map[string]*Branch
 }
 
 type Branch struct {
-	Code string `json:"code"`
-	Name string `json:"name"`
-	Kana string `json:"kana"`
-	Hira string `json:"hira"`
-	Roma string `json:"roma"`
+	Code string
+	Name string
+	Kana string
+	Hira string
+	Roma string
 }

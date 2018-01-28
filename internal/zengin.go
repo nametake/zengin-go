@@ -9,8 +9,6 @@ import (
 	"io"
 	"os"
 	"path"
-
-	"github.com/nametake/zengin-go"
 )
 
 const (
@@ -20,13 +18,13 @@ const (
 	branchesDir string = "branches"
 )
 
-func Read(datapath string) (map[string]*zengin.Bank, error) {
+func Read(datapath string) (map[string]*Bank, error) {
 	f, err := os.Open(path.Join(datapath, banksFile))
 	if err != nil {
 		return nil, err
 	}
 
-	var banks map[string]*zengin.Bank
+	var banks map[string]*Bank
 
 	if err := json.NewDecoder(f).Decode(&banks); err != nil {
 		return nil, err
@@ -47,26 +45,11 @@ func Read(datapath string) (map[string]*zengin.Bank, error) {
 	return banks, nil
 }
 
-func Output(w io.Writer, banks map[string]*zengin.Bank) error {
+func Output(w io.Writer, pkgname string, banks map[string]*Bank) error {
 	f := &ast.File{
 		// packange name
-		Name: ast.NewIdent("internal"),
+		Name: ast.NewIdent(pkgname),
 		Decls: []ast.Decl{
-			// import zengin-go
-			&ast.GenDecl{
-				Tok: token.IMPORT,
-				Specs: []ast.Spec{
-					&ast.ImportSpec{
-						Name: &ast.Ident{
-							Name: "zengin",
-						},
-						Path: &ast.BasicLit{
-							Kind:  token.STRING,
-							Value: importPath,
-						},
-					},
-				},
-			},
 			// banks
 			&ast.GenDecl{
 				// var
@@ -87,13 +70,8 @@ func Output(w io.Writer, banks map[string]*zengin.Bank) error {
 										Name: "string",
 									},
 									Value: &ast.StarExpr{
-										X: &ast.SelectorExpr{
-											X: &ast.Ident{
-												Name: "zengin",
-											},
-											Sel: &ast.Ident{
-												Name: "Bank",
-											},
+										X: &ast.Ident{
+											Name: "Bank",
 										},
 									},
 								},
@@ -109,7 +87,7 @@ func Output(w io.Writer, banks map[string]*zengin.Bank) error {
 	return format.Node(w, token.NewFileSet(), f)
 }
 
-func bankElts(banks map[string]*zengin.Bank) []ast.Expr {
+func bankElts(banks map[string]*Bank) []ast.Expr {
 	var elts []ast.Expr
 
 	for k, bank := range banks {
@@ -121,13 +99,8 @@ func bankElts(banks map[string]*zengin.Bank) []ast.Expr {
 			Value: &ast.UnaryExpr{
 				Op: token.AND,
 				X: &ast.CompositeLit{
-					Type: &ast.SelectorExpr{
-						X: &ast.Ident{
-							Name: "zengin",
-						},
-						Sel: &ast.Ident{
-							Name: "Bank",
-						},
+					Type: &ast.Ident{
+						Name: "Bank",
 					},
 					Elts: []ast.Expr{
 						&ast.KeyValueExpr{
@@ -191,20 +164,15 @@ func bankElts(banks map[string]*zengin.Bank) []ast.Expr {
 	return elts
 }
 
-func genBranches(branches map[string]*zengin.Branch) *ast.CompositeLit {
+func genBranches(branches map[string]*Branch) *ast.CompositeLit {
 	lit := &ast.CompositeLit{
 		Type: &ast.MapType{
 			Key: &ast.Ident{
 				Name: "string",
 			},
 			Value: &ast.StarExpr{
-				X: &ast.SelectorExpr{
-					X: &ast.Ident{
-						Name: "zengin",
-					},
-					Sel: &ast.Ident{
-						Name: "Branch",
-					},
+				X: &ast.Ident{
+					Name: "Branch",
 				},
 			},
 		},
@@ -219,13 +187,8 @@ func genBranches(branches map[string]*zengin.Branch) *ast.CompositeLit {
 			Value: &ast.UnaryExpr{
 				Op: token.AND,
 				X: &ast.CompositeLit{
-					Type: &ast.SelectorExpr{
-						X: &ast.Ident{
-							Name: "zengin",
-						},
-						Sel: &ast.Ident{
-							Name: "Branch",
-						},
+					Type: &ast.Ident{
+						Name: "Branch",
 					},
 					Elts: []ast.Expr{
 						&ast.KeyValueExpr{
